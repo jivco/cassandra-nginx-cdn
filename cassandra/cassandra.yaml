@@ -12,6 +12,10 @@ batch_size_warn_threshold_in_kb: 5000000
 batch_size_fail_threshold_in_kb: 50000000
 compaction_throughput_mb_per_sec: 128
 concurrent_compactors: 2
+max_hint_window_in_ms: 43200000 # 12 hours
+hinted_handoff_throttle_in_kb: 102400
+max_hints_delivery_threads: 4
+batchlog_replay_throttle_in_kb: 102400
 auto_bootstrap: false
 
 #auth settings
