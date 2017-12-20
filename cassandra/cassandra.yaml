@@ -1,0 +1,21 @@
+cluster_name: 'Test Cluster'
+
+seed_provider:
+    - class_name: org.apache.cassandra.locator.SimpleSeedProvider
+      parameters:
+          - seeds: "127.0.0.1,127.0.0.2"
+          
+listen_address: 127.0.0.1
+rpc_address: 127.0.0.1
+endpoint_snitch: GossipingPropertyFileSnitch
+batch_size_warn_threshold_in_kb: 5000000
+batch_size_fail_threshold_in_kb: 50000000
+compaction_throughput_mb_per_sec: 128
+concurrent_compactors: 2
+auto_bootstrap: false
+
+#auth settings
+authenticator: PasswordAuthenticator
+authorizer: CassandraAuthorizer
+roles_validity_in_ms: 600000
+permissions_validity_in_ms: 600000

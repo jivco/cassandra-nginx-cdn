@@ -1,0 +1,7 @@
+[connection] 
+hostname=127.0.0.1
+
+[authentication]
+keyspace=dvr
+username = root
+password = 12345678

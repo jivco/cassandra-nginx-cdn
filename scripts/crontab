@@ -1,0 +1,7 @@
+* * * * * root /usr/local/bin/check_smf_stream.sh
+*/2 * * * * root /root/check_ffmpeg.sh
+
+0 0 * * * root >/tmp/ffreport.log
+
+50 17 * * * root rm -f /usr/local/WowzaStreamingEngine/logs/wowzastreamingengine_access.log.*
+50 17 * * * root rm -f /usr/local/WowzaStreamingEngine/logs/wowzastreamingengine_error.log.*

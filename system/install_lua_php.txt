@@ -1,0 +1,16 @@
+yum -y install epel-release inotify-tools redis
+yum -y groupinstall 'Development Tools'
+yum -y localinstall https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+yum -y install php56w-cli
+yum -y localinstall http://downloads.datastax.com/php-driver/centos/7/cassandra/v1.3.0/php56w-cassandra-driver-1.3.0stable-1.el7.centos.x86_64.rpm http://downloads.datastax.com/cpp-driver/centos/7/dependencies/libuv/v1.11.0/libuv-1.11.0-1.el7.centos.x86_64.rpm http://downloads.datastax.com/cpp-driver/centos/7/cassandra/v2.6.0/cassandra-cpp-driver-2.6.0-1.el7.centos.x86_64.rpm
+
+ln -s /usr/share/lua /usr/local/share/lua
+yum -y install luarocks
+yum -y install lua-devel
+luarocks install lua-cassandra
+luarocks install luasocket
+
+mkdir /usr/share/lua/5.1/dvr
+cp lua/dvr/init.lua /usr/share/lua/5.1/dvr/
+
+redis-cli set 12345678 1

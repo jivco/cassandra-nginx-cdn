@@ -1,0 +1,17 @@
+#!/bin/bash
+
+PLAYLIST_NAME=bnt1_480p
+PLAYLIST_PATH=/tmp/wwwroot/ffmpeg-test
+PLAYLIST_SUFFIX=m3u8
+PLAYLIST=$PLAYLIST_PATH/$PLAYLIST_NAME.$PLAYLIST_SUFFIX
+INSERT_SCILLA_PHP=/root/cassandra/write_chunks_in_scylla.php
+PHP_BIN=/usr/bin/php
+
+while true; do
+  inotifywait -e modify $PLAYLIST
+  LAST_MEDIA=$(tail -n 2 $PLAYLIST|tr -d "\n")
+  LAST_MEDIA_INFO=(${LAST_MEDIA//,/ })
+  CHUNK_DURATION=${LAST_MEDIA_INFO[0]#*:}
+  CHUNK_FILENAME=${LAST_MEDIA_INFO[1]}
+  $PHP_BIN $INSERT_SCILLA_PHP $PLAYLIST_NAME $PLAYLIST_PATH $CHUNK_FILENAME $CHUNK_DURATION
+done

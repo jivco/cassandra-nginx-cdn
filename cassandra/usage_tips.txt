@@ -1,0 +1,33 @@
+yum -y install dstat - to monitor disk performance
+
+auto_bootstrap: false - when you init cluster for first time
+
+Use G1 as the Java garbage collector with at least 14GB heap size (see jvm.options) so the garbage collector will run less frequent.
+
+nodetool getcompactionthroughput - default is 16MB/sec - needs to be increased!
+nodetool describecluster - check if Schema versions are the same!
+nodetool status
+nodetool tablehistograms - see maximum response time!!!
+nodetool compactionstats - see number of pending tasks!!!
+nodetool netstats - monitor joining process
+nodetool cfstats - show table statistics and read/write latency
+nodetool proxyhistograms - read/write latency statistics including network latency - useful to see if requests encounter a slow node
+nodetool cfhistograms keyspace table - if there is huge delta between 99% and Max (say 20 times or more) you must change your compaction strategy.
+nodetool tpstats - show status of active tasks
+nodetool listsnapshots - to see if there are unused snapshots
+nodetool clearsnapshots
+
+for node replacement - at the end of cassandra-env.sh:
+JVM_OPTS="$JVM_OPTS -Dcassandra.replace_address=10.20.10.2"
+don't forget to remove it after booting!!!
+
+du -h -t10k -d3 /mnt/cassandra/data/dvr/|sort -rh - get a list of tabes and their size.
+
+if compaction causes issues:
+nodetool setcompactionthroughput 16 - throttle compaction
+nodetool stop compaction - stop and disable compaction
+nodetool disablebinary && nodetool disablegossip && nodetool disablethrift && nodetool setcompactionthroughput 0 - take the node out (and unthrottle)
+
+nodetool toppartitions keyspace table 10000 - to see READ and WRITE partitions(fields) for 10 seconds
+
+you must enable DURABLE_WRITES when bootstraping new nodes (if you have enough bandwidth of course) or you'll lose data.

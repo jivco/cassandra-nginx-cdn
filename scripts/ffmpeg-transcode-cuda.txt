@@ -1,0 +1,25 @@
+# Don't forget to patch ffmpeg with https://github.com/arut/ffmpeg-patches/blob/master/mpegts-33bit
+# HLS
+ffmpeg -v debug -hwaccel cuvid -c:v h264_cuvid -deint 2 -drop_second_field 1 -vsync 0 \
+-i 'udp://239.0.0.1:30000?buffer_size=65535&fifo_size=1000000' \
+-map 0:0 -map 0:1 -map 0:0 -map 0:1 -map 0:0 -map 0:1 \
+-c:v:0 h264_nvenc -profile:v:0 high -level:v:0 4.0 -g:v:0 80 -b:v:0 4M -maxrate:v:0 6M \
+-preset:v:0 slow -rc:v:0 vbr_hq -weighted_pred:v:0 1 -temporal-aq:v:0 1 -strict_gop:v:0 1 \
+-c:a:0 libfdk_aac -b:a:0 192k -ac:0 2 -ar:0 48k \
+-c:v:1 h264_nvenc -filter:v:1 scale_npp=w=-1:h=720:interp_algo=lanczos -profile:v:1 high -level:v:1 4.0 -g:v:1 80 -b:v:1 2M -maxrate:v:1 4M \
+-preset:v:1 slow -rc:v:1 vbr_hq -weighted_pred:v:1 1 -temporal-aq:v:1 1 -strict_gop:v:1 1 \
+-c:a:1 libfdk_aac -b:a:1 128k -ac:1 2 -ar:1 48k \
+-c:v:2 h264_nvenc -filter:v:2 scale_npp=w=-1:h=360:interp_algo=super -profile:v:2 high -level:v:2 4.0 -g:v:2 80 -b:v:2 0.5M -maxrate:v:2 1M \
+-preset:v:2 slow -rc:v:2 vbr_hq -weighted_pred:v:2 1 -temporal-aq:v:2 1 -strict_gop:v:2 1 \
+-c:a:2 libfdk_aac -b:a:2 64k -ac:2 2 -ar:2 48k \
+-f tee \
+"[select=\'v:0,a:0\':f=hls:hls_list_size=3:hls_segment_filename=\'1080p_%1d.ts\':hls_flags=delete_segments]1080p.m3u8| \
+[select=\'v:1,a:1\':f=hls:hls_list_size=3:hls_segment_filename=\'720p_%1d.ts\':hls_flags=delete_segments]720p.m3u8"
+
+# MPEG-TS output
+-f tee "[select=\'v:0,a:0\':f=mpegts:pcr_period=200:flush_packets=0:max_interleave_delta=0]'udp://239.0.0.2:30000?pkt_size=1316&bitrate=12000000&multicast=1'|[select=\'v:1,a:1\':f=mpegts:pcr_period=200:flush_packets=0:max_interleave_delta=0]'udp://239.0.0.3:30000?pkt_size=1316&bitrate=8000000&multicast=1'|[select=\'v:2,a:2\':f=mpegts:pcr_period=200:flush_packets=0:max_interleave_delta=0]'udp://239.0.0.4:30000?pkt_size=1316&bitrate=2000000&multicast=1'"
+
+# DASH
+-f dash -min_seg_duration 3000000 -window_size 5 -use_template 1 -use_timeline 0 -adaptation_sets "id=0,streams=v id=1,streams=a" -media_seg_name 'media_$RepresentationID$-$Number%01d$.m4s' stream.mpd
+
+# DASH generation is not working very well so you can use https://github.com/arut/nginx-ts-module
