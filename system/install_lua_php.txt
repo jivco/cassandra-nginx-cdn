@@ -1,4 +1,6 @@
-yum -y install epel-release inotify-tools redis
+yum -y install epel-release inotify-tools redis chrony
+systemctl enable chrony
+systemctl restart chrony
 yum -y groupinstall 'Development Tools'
 yum -y localinstall https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 yum -y install php56w-cli
