@@ -20,6 +20,7 @@ auto_bootstrap: false
 
 # disk_optimization_strategy: spinning
 # phi_convict_threshold: 5
+# broadcast_rpc_address: 1.2.3.4
 # broadcast_address: 1.2.3.4
 # listen_on_broadcast_address: true
 
