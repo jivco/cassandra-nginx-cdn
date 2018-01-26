@@ -30,7 +30,7 @@ CREATE TABLE dvr.dvr_bnt1_778000_chunk_info (
     AND crc_check_chance = 1.0
     AND dclocal_read_repair_chance = 0.1
     AND default_time_to_live = 43200
-    AND gc_grace_seconds = 86400
+    AND gc_grace_seconds = 43200
     AND max_index_interval = 2048
     AND memtable_flush_period_in_ms = 0
     AND min_index_interval = 128
@@ -48,7 +48,7 @@ CREATE TABLE dvr.dvr_bnt1_778000_chunk_content (
     AND crc_check_chance = 1.0
     AND dclocal_read_repair_chance = 0.1
     AND default_time_to_live = 43200
-    AND gc_grace_seconds = 60
+    AND gc_grace_seconds = 43200
     AND max_index_interval = 2048
     AND memtable_flush_period_in_ms = 0
     AND min_index_interval = 128
@@ -70,7 +70,7 @@ CREATE TABLE dvr.dvr_bnt1_1428000_chunk_info (
     AND crc_check_chance = 1.0
     AND dclocal_read_repair_chance = 0.1
     AND default_time_to_live = 43200
-    AND gc_grace_seconds = 86400
+    AND gc_grace_seconds = 43200
     AND max_index_interval = 2048
     AND memtable_flush_period_in_ms = 0
     AND min_index_interval = 128
@@ -88,7 +88,7 @@ CREATE TABLE dvr.dvr_bnt1_1428000_chunk_content (
     AND crc_check_chance = 1.0
     AND dclocal_read_repair_chance = 0.1
     AND default_time_to_live = 43200
-    AND gc_grace_seconds = 60
+    AND gc_grace_seconds = 43200
     AND max_index_interval = 2048
     AND memtable_flush_period_in_ms = 0
     AND min_index_interval = 128
@@ -112,7 +112,7 @@ CREATE TABLE dvr.dvr_variant_info (
     AND crc_check_chance = 1.0
     AND dclocal_read_repair_chance = 0.1
     AND default_time_to_live = 0
-    AND gc_grace_seconds = 86400
+    AND gc_grace_seconds = 864000
     AND max_index_interval = 2048
     AND memtable_flush_period_in_ms = 0
     AND min_index_interval = 128
