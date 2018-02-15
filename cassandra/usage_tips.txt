@@ -31,3 +31,6 @@ nodetool disablebinary && nodetool disablegossip && nodetool disablethrift && no
 nodetool toppartitions keyspace table 10000 - to see READ and WRITE partitions(fields) for 10 seconds
 
 you must enable DURABLE_WRITES when bootstraping new nodes (if you have enough bandwidth of course) or you'll lose data.
+
+#repair sprcific hosts:
+nodetool repair --full --in-hosts host1,host2 -tr
