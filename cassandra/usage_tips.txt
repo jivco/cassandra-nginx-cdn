@@ -32,5 +32,8 @@ nodetool toppartitions keyspace table 10000 - to see READ and WRITE partitions(f
 
 you must enable DURABLE_WRITES when bootstraping new nodes (if you have enough bandwidth of course) or you'll lose data.
 
+# show failure detector info
+nodetool failuredetector
+
 #repair sprcific hosts:
 nodetool repair --full --in-hosts host1,host2 -tr
