@@ -39,3 +39,6 @@ nodetool failuredetector
 
 # repair sprcific hosts:
 nodetool repair --full --in-hosts host1,host2 -tr
+
+# garbage collection on node
+nodetool garbagecollect
