@@ -30,6 +30,9 @@ nodetool setcompactionthroughput 16 - throttle compaction
 nodetool stop compaction - stop and disable compaction
 nodetool disablebinary && nodetool disablegossip && nodetool disablethrift && nodetool setcompactionthroughput 0 - take the node out (and unthrottle)
 
+# to stop accepting clients using the cql binary protocol
+nodetool disablebinary
+
 nodetool toppartitions keyspace table 10000 - to see READ and WRITE partitions(fields) for 10 seconds
 
 # you must enable DURABLE_WRITES when bootstraping new nodes (if you have enough bandwidth of course) or you'll lose data.
