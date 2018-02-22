@@ -32,6 +32,7 @@ nodetool disablebinary && nodetool disablegossip && nodetool disablethrift && no
 
 # to stop accepting clients using the cql binary protocol
 nodetool disablebinary
+nodetool statusbinary
 
 nodetool toppartitions keyspace table 10000 - to see READ and WRITE partitions(fields) for 10 seconds
 
