@@ -16,6 +16,16 @@ ffmpeg -v debug -hwaccel cuvid -c:v h264_cuvid -deint 2 -drop_second_field 1 -vs
 "[select=\'v:0,a:0\':f=hls:hls_list_size=3:hls_segment_filename=\'1080p_%1d.ts\':hls_flags=delete_segments]1080p.m3u8| \
 [select=\'v:1,a:1\':f=hls:hls_list_size=3:hls_segment_filename=\'720p_%1d.ts\':hls_flags=delete_segments]720p.m3u8"
 
+#HLS with master playlist
+ffmpeg -i some_input \
+-map 0:v:0 -map 0:v:0 -map 0:v:0 -map 0:v:0 -map 0:a:0 \
+-c:v:0 libx264 -s:v:0 1920x1080 -b:v:0 3M -maxrate:v:0 6M -bufsize:v:0 1M -r:v:0 25 -x264-params:v:0 "keyint=80:min-keyint=80" -profile:v:0 high -pix_fmt:v:0 yuv420p \
+-c:v:1 libx264 -s:v:1 1280x720 -b:v:1 2M -maxrate:v:1 4M -bufsize:v:1 1M -r:v:1 25 -x264-params:v:1 "keyint=80:min-keyint=80" -profile:v:1 high -pix_fmt:v:1 yuv420p \
+-c:v:2 libx264 -s:v:2 1024x576 -b:v:2 1.5M -maxrate:v:2 3M -bufsize:v:2 1M -r:v:2 25 -x264-params:v:2 "keyint=80:min-keyint=80" -profile:v:2 high -pix_fmt:v:2 yuv420p \
+-c:v:3 libx264 -s:v:3 640x360 -b:v:3 0.7M -maxrate:v:3 1.4M -bufsize:v:3 1M -r:v:3 25 -x264-params:v:3 "keyint=80:min-keyint=80" -profile:v:3 high -pix_fmt:v:3 yuv420p \
+-c:a:0 libfdk_aac -b:a:0 128k -ac:a:0 2 -ar:0 48000 \
+-f hls -var_stream_map "v:0,a:0 v:1,a:0 v:2,a:0 v:3,a:0" -hls_playlist_type vod -hls_segment_filename 'bitrate%v/chunk_%05d.ts' -master_pl_name variant.m3u8 bitrate%v/playlist.m3u8
+
 # MPEG-TS output
 -f tee "[select=\'v:0,a:0\':f=mpegts:pcr_period=200:flush_packets=0:max_interleave_delta=0]'udp://239.0.0.2:30000?pkt_size=1316&bitrate=12000000&multicast=1'|[select=\'v:1,a:1\':f=mpegts:pcr_period=200:flush_packets=0:max_interleave_delta=0]'udp://239.0.0.3:30000?pkt_size=1316&bitrate=8000000&multicast=1'|[select=\'v:2,a:2\':f=mpegts:pcr_period=200:flush_packets=0:max_interleave_delta=0]'udp://239.0.0.4:30000?pkt_size=1316&bitrate=2000000&multicast=1'"
 
