@@ -33,3 +33,16 @@ ffmpeg -i some_input \
 -f dash -min_seg_duration 3000000 -window_size 5 -use_template 1 -use_timeline 0 -adaptation_sets "id=0,streams=v id=1,streams=a" -media_seg_name 'media_$RepresentationID$-$Number%01d$.m4s' stream.mpd
 
 # DASH generation is not working very well so you can use https://github.com/arut/nginx-ts-module
+
+
+FFMPEG CPU transcoding
+ffmpeg -i test.mov \
+  -filter_complex "[0:v:0]split=3[s0][s1][s2]; \
+  [s0]yadif[v0]; \
+  [s1]scale=w=1280:h=720:force_original_aspect_ratio=decrease:flags=lanczos,yadif[v1]; \
+  [s2]scale=w=640:h=360:force_original_aspect_ratio=decrease:flags=lanczos,yadif[v2]" \
+  -map "[v0]" -c:v libx264 -level 4.1 -b:v 3M -maxrate:v 6M -bufsize:v 1M -r:v 25 -x264-params:v "keyint=80:min-keyint=80:scenecut=-1" -profile:v high -pix_fmt:v yuv420p \
+  -map "[v1]" -c:v libx264 -level 4.1 -b:v 2M -maxrate:v 4M -bufsize:v 1M -r:v 25 -x264-params:v "keyint=80:min-keyint=80:scenecut=-1" -profile:v high -pix_fmt:v yuv420p \
+  -map "[v2]" -c:v libx264 -level 4.1 -b:v 0.7M -maxrate:v 1.4M -bufsize:v 1M -r:v 25 -x264-params:v "keyint=80:min-keyint=80:scenecut=-1" -profile:v high -pix_fmt:v yuv420p \
+  -map 0:a:0 -map 0:a:0 -map 0:a:0 -c:a aac -ac 2 -ar 48000 -ab 128k \
+  -f hls -var_stream_map "v:2,a:2 v:1,a:1 v:0,a:0" -hls_playlist_type vod -hls_segment_filename "dir/bitrate%v/chunk_%05d.ts" -master_pl_name variant.m3u8 dir/bitrate%v/playlist.m3u8
